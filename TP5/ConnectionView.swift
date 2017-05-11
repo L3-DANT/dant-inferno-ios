@@ -27,8 +27,6 @@ class ConnectionView: UIViewController {
         if TextMail.text == "leo.rbrt@gmail.com" {
             if TextMdp.text == "123456789"{
                 
-                print("Button Clicked")
-                
                 let premierTab = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PremierTab")
                 
                 

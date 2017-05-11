@@ -1,5 +1,5 @@
 //
-//  SignUpView.swift
+//  PremierTab.swift
 //  TP5
 //
 //  Created by m2sar on 03/05/17.
@@ -7,3 +7,8 @@
 //
 
 import Foundation
+import UIKit
+
+class PremierTab: UITableViewController {
+    
+}
