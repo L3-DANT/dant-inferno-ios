@@ -16,6 +16,9 @@ class ProfilView: UIViewController {
     @IBOutlet weak var GpsSwitch: UISwitch!
     @IBAction func LogOut(_ sender: AnyObject) {
         
+        
+        ConnectionView.token = ""
+        print("token: \(ConnectionView.token)")
         self.dismiss(animated: true, completion: nil) //sortir du present
         
     }
