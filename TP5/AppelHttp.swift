@@ -11,82 +11,78 @@ import Foundation
 
 class AppelHttp {
     
-    var urldonne: String
-    var create: String
     
-    func makeRequest(request: URLRequest,create: String, completion: @escaping (String)->Void) {
+    func makeRequest(request: URLRequest,create: String)  -> [Contact]  {
+        
+        var info = [Contact]()
+        
         let task = URLSession.shared.dataTask(with: request) {data, response, error in
             guard let data = data, error == nil else{
-                print("error=\(error)")
+                print("error")
                 return
             }
             
+     
+            
             if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                print("response = \(response)")
             }
+            
+          
+            
             //print("DAAAAAAATTTTAAAAAAA: \(data as NSData)") //<-`as NSData` is useful for debugging
             do {
-                var json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                print("JJJJSSSSSOOOOOONNNNNNNN: \(json)")
                 
+               let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                 
-                if create == "tabContact"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
+               print("Json: \(json)")
+                
+            if create == "tabContact"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
+               
+                if let dictionary = json as? [[String: Any]]{
+                
                     
                     
-                    print("TRANSFORMATION TABCONTACt...............................")
+                    for index in 0...dictionary.count - 1 {
+                        
+                    info = info + [Contact(login: dictionary[index]["pseudo"] as! String,checkmark: false, idRecepteur: dictionary[index]["idUser"] as! Int)]
+                        
                     
-                    do {
-                        json = try JSONSerialization.jsonObject(with: data)
-                    } catch {
-                        print(error)
-                    }
-                    guard let item = (json as AnyObject) as? [String: Any],
-                        let pseudo = item["pseudo"] as? [String: Any],
-                        let idRecepteur = item["idRecepteur"] as? Int else {
-                            return
                     }
                     
-                    print("pseudo: \(pseudo)")
-                    print("idRecepteur: \(idRecepteur)")
-                    
-
-                    
-                    
-                    
+                   
+               }
+                
+                
                 }
-                
-                
-                
-                
-                
+           
             } catch {
                 print("error serializing JSON: \(error)")
             }
-            //Not sure what you mean with "i need to return the json as String"
-            let responseString = String(data: data, encoding: .utf8) ?? ""
-            completion(responseString)
-        }
-        task.resume()
-    }
-    
-    
-    
-
-    
-    init(urldonne: String, create: String) {
-        
-        self.urldonne = urldonne
-        self.create = create
-        
-        makeRequest(request: URLRequest(url: URL(string: urldonne)!), create: create) { (result : String?) in
-            if let result = result {
-                print("got result: \(result)")
-            }
             
+            //let responseString = String(data: data, encoding: .utf8) ?? ""
+            //completion(???)
         }
         
+        task.resume()
+        
+        return info
+        
     }
+    
+    
+    
+    
+    init(){
+        
+        //self.urldonne = urldonne
+        //self.create = create
+        //self.cellInfo = cellInfo
+        //self.cellInfo = makeRequest(request: URLRequest(url: URL(string: urldonne)!), create: create)
+        //print(cellInfo.count)
+        //print(cellInfo)
+        
+    }
+
+
  }
-
-

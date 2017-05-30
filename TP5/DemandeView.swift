@@ -1,54 +1,47 @@
 //
-//  ContactView.swift
+//  DemandeView.swift
 //  TP5
 //
-//  Created by m2sar on 03/05/17.
+//  Created by m2sar on 29/05/17.
 //  Copyright © 2017 m2sar. All rights reserved.
 //
 
 import Foundation
-
 import UIKit
 
-class ContactView: UITableViewController {
+class DemandeView: UITableViewController {
+    
     
     
     var url: String = ""
-    var cellInfo = [Contact]()
+    var cellInfoDemande = [Contact]()
     var dictionary = [[String: Any]]()
     
     
-    
+    @IBOutlet var DemandeTableView: UITableView!
    
-    @IBOutlet weak var DemandeButton: UIBarButtonItem!
-    @IBOutlet weak var rechercheButton: UIBarButtonItem!
-   @IBOutlet weak var UrlButton: UIButton!
-    
-
-    
     override func viewDidLoad() {
         
         
+        url = "http://178.62.22.140:8080/api/contact/liste/demandes?idUser=7"
+        makeRequest(request: URLRequest(url: URL(string: url)!), create: "tabDemande", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
         
-        url = "http://178.62.22.140:8080/api/contact/liste/amis?idUser=7"
-        
-        makeRequest(request: URLRequest(url: URL(string: url)!), create: "tabContact", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
-        
-
         
         super.viewDidLoad()
-        
-        
-        
         // Do any additional setup after loading the view, typically from a nib.
+        //searchBar.delegate = self
+        
     }
-   
-   
     
     
+    func back(sender: UIBarButtonItem) {
+        // Perform your custom actions
+       
     
     
-   
+        // Go back to the previous ViewController
+        _ = navigationController?.popViewController(animated: true)
+    }
     
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -56,51 +49,19 @@ class ContactView: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-         return cellInfo.count
-       
+        return cellInfoDemande.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
-        
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "mycell") //my cell is the identifier
         
-        cell.textLabel?.text = cellInfo[indexPath.row].login + String(cellInfo[indexPath.row].idRecepteur)  //"Test"
+        cell.textLabel?.text = cellInfoDemande[indexPath.row].login //"Test"
         //        cell.accessoryType = .checkmark
-        
-        
-    
         
         return cell
         
     }
     
-    //met une checkMark sur la ligne selectionnée
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        
-        if cellInfo[indexPath.row].checkmark == true{
-            
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            cellInfo[indexPath.row].checkmark  = false
-            
-        }else{
-            
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            cellInfo[indexPath.row].checkmark  = true
-            
-        }
-        
-        //envoi l'activation/desactivation du checkMark à la BDD
-        
-    }
-    
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
     
     //crée un bouton delete
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -110,18 +71,20 @@ class ContactView: UITableViewController {
             
             func myHandler(alert: UIAlertAction){
                 
-                
-                self.url = "http://178.62.22.140:8080/api/contact/suppression?idUser=7&idContactSupprime=" + String(describing: self.cellInfo.remove(at: indexPath[1]).idRecepteur)
+
+                self.url = "http://178.62.22.140:8080/api/contact/refus?idUser=7&idContactRefuse=" + String(describing: self.cellInfoDemande.remove(at: indexPath[1]).idRecepteur)
                 var request = URLRequest(url: URL(string: self.url)!);
                 request.httpMethod = "DELETE";
+                
                 self.makeRequest(request: request, create: "suppression", row: indexPath.row) //le parametre create permet de déterminer ce que le résultat de la requete sera
                 
-                //self.cellInfo.remove(at: indexPath.row)
-                //self.tableView.reloadData()
+                
+                //self.cellInfoDemande.remove(at: indexPath.row)
+                //tableView.reloadData()
                 print("You tapped: \(alert.title)")
             }
             
-            let otherAlert = UIAlertController(title: "Voulez vous supprimer cet ami?", message: "Cette action est irréversible.", preferredStyle: UIAlertControllerStyle.actionSheet)
+            let otherAlert = UIAlertController(title: "Voulez vous supprimer cette demande d'ami?", message: "(Cette action est irréversible.)", preferredStyle: UIAlertControllerStyle.actionSheet)
             
             
             
@@ -136,56 +99,55 @@ class ContactView: UITableViewController {
             self.present(otherAlert, animated: true, completion: nil)
             
             
-            //envoi l'effacement du contact à la BDD
-            
             
         }),
                 //////crée un bouton Desactivate qui supprime la checkMark de la ligne selectionnée
-            UITableViewRowAction(style: .normal, title: "Historique", handler: { (action, indexPath) in
-            
-            //self.cellInfo[indexPath.row].checkmark = false
-            //tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            
-            //envoi le blocage du checkMark à la BDD
-            
-            //self.tableView.reloadData()
+            UITableViewRowAction(style: .normal, title: "Accepter", handler: { (action, indexPath) in
                 
+                func myHandler(alert: UIAlertAction){
+                  
+                    
+                    self.url = "http://178.62.22.140:8080/api/contact/acceptation?idUser=7&idContactAccepte=" + String(describing: self.cellInfoDemande.remove(at: indexPath[1]).idRecepteur)
+                    var request = URLRequest(url: URL(string: self.url)!);
+                    request.httpMethod = "POST";
+                    
+                    self.makeRequest(request: request, create: "suppression", row: indexPath.row) //le parametre create permet de déterminer ce que le résultat de la requete sera
+                    
+                    
+                    //self.cellInfoDemande.remove(at: indexPath.row)
+                    //tableView.reloadData()
+                    print("You tapped: \(alert.title)")
+                    
+                    
+                }
+                
+                let otherAlert = UIAlertController(title: "Voulez vous accepter cette demande d'ami?", message: "(Vous pourrez des lors, communiquer et visualiser la position de cette personne !)", preferredStyle: UIAlertControllerStyle.actionSheet)
+                
+                
+                
+                let callFunction = UIAlertAction(title: "Valider", style: UIAlertActionStyle.destructive, handler: myHandler)
+                
+                let dismiss = UIAlertAction(title: "Annuler", style: UIAlertActionStyle.cancel, handler: nil)
+                
+                // relate actions to controllers
+                otherAlert.addAction(callFunction)
+                otherAlert.addAction(dismiss)
+                
+                self.present(otherAlert, animated: true, completion: nil)
+                
+
+                
+            
             })
         ]
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    
-    
-    
-    
-    @IBAction func url(_ sender: AnyObject) { //permet de charger le tableau
-        
-        
-        cellInfo.removeAll() //remise à zero
-        dictionary.removeAll() //remise à zero
-        
-        url = "http://178.62.22.140:8080/api/contact/liste/amis?idUser=7"
-        
-        makeRequest(request: URLRequest(url: URL(string: url)!), create: "tabContact", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
-        
-        //tableView.reloadData()
-        
-    }
-    
-    
-    
+
     
     
     func makeRequest(request: URLRequest,create: String, row: Int){
         
-        
-        
-        let task = URLSession.shared.dataTask(with: request) {data, response, error in guard let data = data, error == nil else{
+        let task = URLSession.shared.dataTask(with: request) {data, response, error in
+            guard let data = data, error == nil else{
                 print("error")
                 return
             }
@@ -205,7 +167,7 @@ class ContactView: UITableViewController {
                 
                 print("Json: \(json)")
                 
-                if create == "tabContact"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
+                if create == "tabDemande"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
                     
                     self.dictionary = json as! [[String: Any]]//{
                     
@@ -213,31 +175,30 @@ class ContactView: UITableViewController {
                         
                         for index in 0...self.dictionary.count - 1 {
                             
-                            self.cellInfo = self.cellInfo + [Contact(login: self.dictionary[index]["pseudo"] as! String,checkmark: false, idRecepteur: self.dictionary[index]["idDemandeur"] as! Int)]
+                            self.cellInfoDemande = self.cellInfoDemande + [Contact(login: self.dictionary[index]["pseudoDemandeur"] as! String,checkmark: false, idRecepteur: self.dictionary[index]["idDemandeur"] as! Int)]
                             
-                           
                         }
                         
-                       
                         DispatchQueue.main.async {
                             self.tableView.reloadData()
                         }
                         
+                        
                     }
                     
-                 }
-                
+                }
                 
                 if create == "suppression"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
                     
                     
                     
-                    self.cellInfo.remove(at: row)
-                    self.tableView.reloadData()
+                    //self.cellInfoDemande.remove(at: row)
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                     
                     
                 }
-
                 
                 
                 
@@ -249,15 +210,13 @@ class ContactView: UITableViewController {
             //completion(???)
         }
         
-     
-   
-        
-        
-        
         task.resume()
-        
-            }
+    }
     
-
+    
     
 }
+
+
+
+

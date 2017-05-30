@@ -14,16 +14,13 @@ class Contact{
     
     var login: String
     var checkmark: Bool
-    var x: Double
-    var y: Double
+    var idRecepteur: Int
     
-    
-    init(login: String, checkmark: Bool, x: Double, y: Double){
+    init(login: String, checkmark: Bool, idRecepteur: Int){
         
         self.login = login
         self.checkmark = checkmark
-        self.x = x
-        self.y = y
+        self.idRecepteur = idRecepteur
         
     }
     

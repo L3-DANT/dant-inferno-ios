@@ -24,6 +24,7 @@
 		D6D742001E8CF5E9002F785F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6D741FE1E8CF5E9002F785F /* LaunchScreen.storyboard */; };
 		D6D742091E8D017C002F785F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6D742081E8D017C002F785F /* MapKit.framework */; };
 		D6D7420B1E8D0264002F785F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6D7420A1E8D0264002F785F /* CoreLocation.framework */; };
+		D6E09E711EDC4C3A00C11AA5 /* DemandeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E09E701EDC4C3A00C11AA5 /* DemandeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		D6D742011E8CF5E9002F785F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6D742081E8D017C002F785F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		D6D7420A1E8D0264002F785F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D6E09E701EDC4C3A00C11AA5 /* DemandeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemandeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				D608E6501EC34F4500A37AA2 /* Main.storyboard */,
+				D6E09E701EDC4C3A00C11AA5 /* DemandeView.swift */,
 				D645910E1EBB92C200289337 /* Contact.swift */,
 				D645910A1EBB5CB200289337 /* MessagerieView.swift */,
 				D667F41E1EBB180500B1FE90 /* ProfilView.swift */,
@@ -193,6 +196,7 @@
 				D6D741F81E8CF5E9002F785F /* MapView.swift in Sources */,
 				D6D741F61E8CF5E9002F785F /* AppDelegate.swift in Sources */,
 				D645910B1EBB5CB200289337 /* MessagerieView.swift in Sources */,
+				D6E09E711EDC4C3A00C11AA5 /* DemandeView.swift in Sources */,
 				D63A60F11EC309CD004C0437 /* SearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,10 +320,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TP5/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = montest.TP5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -328,10 +334,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TP5/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = montest.TP5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
