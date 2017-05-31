@@ -51,7 +51,7 @@ class SearchView: UITableViewController, UISearchBarDelegate {
         
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "mycell") //my cell is the identifier
         
-        cell.textLabel?.text = cellInfo[indexPath.row].login + String(cellInfo[indexPath.row].idRecepteur)  //"Test"
+        cell.textLabel?.text = cellInfo[indexPath.row].login  //"Test"
         //        cell.accessoryType = .checkmark
         
         return cell
@@ -74,8 +74,8 @@ class SearchView: UITableViewController, UISearchBarDelegate {
                 
                 //changer en demande d'ami
                 
-                
-                self.url = "http://178.62.22.140:8080/api/contact/ajout?idUser=7&idAjoute=" + String(describing: self.cellInfo.remove(at: indexPath[1]).idRecepteur)
+               
+                self.url = "http://178.62.22.140:8080/api/contact/ajout?idUser=" + String(ConnectionView.idUser)  + "&idAjoute=" + String(describing: self.cellInfo.remove(at: indexPath[1]).idRecepteur) + "&token=" + ConnectionView.token
                 var request = URLRequest(url: URL(string: self.url)!);
                 request.httpMethod = "PUT";
                 self.makeRequest(request: request, create: "suppression", row: indexPath.row) //le parametre create permet de déterminer ce que le résultat de la requete sera
