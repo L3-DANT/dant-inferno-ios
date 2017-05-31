@@ -14,9 +14,8 @@ class ContactView: UITableViewController {
     
     
     var url: String = ""
-    var cellInfo = [Contact]()
     var dictionary = [[String: Any]]()
-    
+    var cellInfo = [Contact]()
     
     
    
@@ -27,17 +26,16 @@ class ContactView: UITableViewController {
 
     
     override func viewDidLoad() {
+      
+        
+        self.url =  "http://178.62.22.140:8080/api/private/contact/liste/amis?idUser=" + String(ConnectionView.idUser) + "&token=" + ConnectionView.token
+        
+        self.makeRequest(request: URLRequest(url: URL(string: self.url)!), create: "tabContact", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
         
         
-        
-        url = "http://178.62.22.140:8080/api/contact/liste/amis?idUser=7"
-        
-        makeRequest(request: URLRequest(url: URL(string: url)!), create: "tabContact", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
-        
-
         
         super.viewDidLoad()
-        
+        self.tableView.reloadData()
         
         
         // Do any additional setup after loading the view, typically from a nib.
@@ -67,7 +65,7 @@ class ContactView: UITableViewController {
         
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "mycell") //my cell is the identifier
         
-        cell.textLabel?.text = cellInfo[indexPath.row].login + String(cellInfo[indexPath.row].idRecepteur)  //"Test"
+        cell.textLabel?.text = cellInfo[indexPath.row].login //"Test"
         //        cell.accessoryType = .checkmark
         
         
@@ -87,6 +85,7 @@ class ContactView: UITableViewController {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
             cellInfo[indexPath.row].checkmark  = false
             
+            
         }else{
             
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
@@ -94,7 +93,6 @@ class ContactView: UITableViewController {
             
         }
         
-        //envoi l'activation/desactivation du checkMark à la BDD
         
     }
     
@@ -111,13 +109,12 @@ class ContactView: UITableViewController {
             func myHandler(alert: UIAlertAction){
                 
                 
-                self.url = "http://178.62.22.140:8080/api/contact/suppression?idUser=7&idContactSupprime=" + String(describing: self.cellInfo.remove(at: indexPath[1]).idRecepteur)
+                self.url = "http://178.62.22.140:8080/api/contact/suppression?idUser=" + String(ConnectionView.idUser) + "&idContactSupprime=" + String(describing: self.cellInfo.remove(at: indexPath[1]).idRecepteur)
                 var request = URLRequest(url: URL(string: self.url)!);
                 request.httpMethod = "DELETE";
                 self.makeRequest(request: request, create: "suppression", row: indexPath.row) //le parametre create permet de déterminer ce que le résultat de la requete sera
                 
-                //self.cellInfo.remove(at: indexPath.row)
-                //self.tableView.reloadData()
+                self.tableView.reloadData()
                 print("You tapped: \(alert.title)")
             }
             
@@ -140,7 +137,7 @@ class ContactView: UITableViewController {
             
             
         }),
-                //////crée un bouton Desactivate qui supprime la checkMark de la ligne selectionnée
+                //crée un bouton Desactivate qui supprime la checkMark de la ligne selectionnée
             UITableViewRowAction(style: .normal, title: "Historique", handler: { (action, indexPath) in
             
             //self.cellInfo[indexPath.row].checkmark = false
@@ -150,7 +147,70 @@ class ContactView: UITableViewController {
             
             //self.tableView.reloadData()
                 
+                func myHandler(alert: UIAlertAction){
+                    
+                    ConnectionView.Historique = self.cellInfo[indexPath.row].idRecepteur
+                    print(self.cellInfo[indexPath.row].idRecepteur)
+                    print(ConnectionView.Historique)
+                    
+                }
+                func myHandler2(alert: UIAlertAction){
+                    
+                    ConnectionView.Historique = -1
+                    print(ConnectionView.Historique)
+                    
+                }
+               
+                
+                if ConnectionView.Historique != self.cellInfo[indexPath.row].idRecepteur {
+                    
+                    let otherAlert = UIAlertController(title: "Voulez vous afficher l'historique de cet ami?", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    
+                    
+                    
+                    let callFunction = UIAlertAction(title: "Valider", style: UIAlertActionStyle.destructive, handler: myHandler)
+                    
+                    let dismiss = UIAlertAction(title: "Annuler", style: UIAlertActionStyle.cancel, handler: nil)
+                    
+                    // relate actions to controllers
+                    otherAlert.addAction(callFunction)
+                    otherAlert.addAction(dismiss)
+                    
+                    self.present(otherAlert, animated: true, completion: nil)
+                    
+                }
+                
+                
+                if ConnectionView.Historique == self.cellInfo[indexPath.row].idRecepteur{
+                    
+                    let otherAlert = UIAlertController(title: "Voulez vous arreter d'afficher l'historique de cet ami?", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    
+                    
+                    
+                    let callFunction = UIAlertAction(title: "Valider", style: UIAlertActionStyle.destructive, handler: myHandler2)
+                    
+                    let dismiss = UIAlertAction(title: "Annuler", style: UIAlertActionStyle.cancel, handler: nil)
+                    
+                    // relate actions to controllers
+                    otherAlert.addAction(callFunction)
+                    otherAlert.addAction(dismiss)
+                    
+                    self.present(otherAlert, animated: true, completion: nil)
+                    
+                }
+                
+                
             })
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         ]
     }
     
@@ -159,26 +219,7 @@ class ContactView: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-    
-    
-    @IBAction func url(_ sender: AnyObject) { //permet de charger le tableau
-        
-        
-        cellInfo.removeAll() //remise à zero
-        dictionary.removeAll() //remise à zero
-        
-        url = "http://178.62.22.140:8080/api/contact/liste/amis?idUser=7"
-        
-        makeRequest(request: URLRequest(url: URL(string: url)!), create: "tabContact", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
-        
-        //tableView.reloadData()
-        
-    }
-    
-    
-    
+ 
     
     
     func makeRequest(request: URLRequest,create: String, row: Int){
@@ -205,6 +246,7 @@ class ContactView: UITableViewController {
                 
                 print("Json: \(json)")
                 
+              
                 if create == "tabContact"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
                     
                     self.dictionary = json as! [[String: Any]]//{
@@ -213,32 +255,39 @@ class ContactView: UITableViewController {
                         
                         for index in 0...self.dictionary.count - 1 {
                             
-                            self.cellInfo = self.cellInfo + [Contact(login: self.dictionary[index]["pseudo"] as! String,checkmark: false, idRecepteur: self.dictionary[index]["idDemandeur"] as! Int)]
+                            if self.dictionary[index]["idRecepteur"] as! Int != ConnectionView.idUser {
+                                
+                                self.cellInfo = self.cellInfo + [Contact(login: self.dictionary[index]["pseudo"] as! String,checkmark: false, idRecepteur: self.dictionary[index]["idRecepteur"] as! Int)]
+                                
+                                
+                            }else{
+                                
+                                self.cellInfo = self.cellInfo + [Contact(login: self.dictionary[index]["pseudo"] as! String,checkmark: false, idRecepteur: self.dictionary[index]["idDemandeur"] as! Int)]
+                                
+                                
+                            }
                             
-                           
-                        }
-                        
-                       
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
                         }
                         
                     }
-                    
-                 }
-                
+                }
+
                 
                 if create == "suppression"{ //créer un tableau de contact contenant ce qui nous est renvoyé par l'API
                     
                     
                     
-                    self.cellInfo.remove(at: row)
-                    self.tableView.reloadData()
+                    //self.cellInfo.remove(at: row)
+                    
                     
                     
                 }
 
-                
+                DispatchQueue.main.async {
+                    
+                    self.tableView.reloadData()
+                    
+                }
                 
                 
             } catch {

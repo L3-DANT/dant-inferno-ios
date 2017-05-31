@@ -23,7 +23,7 @@ class DemandeView: UITableViewController {
     override func viewDidLoad() {
         
         
-        url = "http://178.62.22.140:8080/api/contact/liste/demandes?idUser=7"
+        url = "http://178.62.22.140:8080/api/private/contact/liste/demandes?idUser=" + String(ConnectionView.idUser) + "&token=" + ConnectionView.token
         makeRequest(request: URLRequest(url: URL(string: url)!), create: "tabDemande", row: 0) //le parametre create permet de déterminer ce que le résultat de la requete sera
         
         
@@ -72,7 +72,7 @@ class DemandeView: UITableViewController {
             func myHandler(alert: UIAlertAction){
                 
 
-                self.url = "http://178.62.22.140:8080/api/contact/refus?idUser=7&idContactRefuse=" + String(describing: self.cellInfoDemande.remove(at: indexPath[1]).idRecepteur)
+                self.url = "http://178.62.22.140:8080/api/private/contact/refus?idUser=" + String(ConnectionView.idUser) + "&idContactRefuse=" + String(describing: self.cellInfoDemande.remove(at: indexPath[1]).idRecepteur) + "&token=" + ConnectionView.token
                 var request = URLRequest(url: URL(string: self.url)!);
                 request.httpMethod = "DELETE";
                 
@@ -106,8 +106,8 @@ class DemandeView: UITableViewController {
                 
                 func myHandler(alert: UIAlertAction){
                   
-                    
-                    self.url = "http://178.62.22.140:8080/api/contact/acceptation?idUser=7&idContactAccepte=" + String(describing: self.cellInfoDemande.remove(at: indexPath[1]).idRecepteur)
+
+                    self.url = "http://178.62.22.140:8080/api/private/contact/acceptation?idUser=" + String(ConnectionView.idUser)+"&idContactAccepte=" + String(describing: self.cellInfoDemande.remove(at: indexPath[1]).idRecepteur) + "&token=" + ConnectionView.token
                     var request = URLRequest(url: URL(string: self.url)!);
                     request.httpMethod = "POST";
                     
